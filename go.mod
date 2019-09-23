@@ -1,3 +1,3 @@
-module github.com/oriolvendrell/stats
+module github.com/orvend/stats
 
 go 1.13
