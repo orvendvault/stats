@@ -24,3 +24,9 @@ func TestMean(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkMean(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Mean([]float64{5.1, 5.3, 6.0, 4.2, 5.0, 5.3, 4.9, 5.1, 5.2, 5.7, 4.6})
+	}
+}
