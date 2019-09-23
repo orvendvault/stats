@@ -2,7 +2,7 @@ package stats
 
 import "testing"
 
-func Test_mean(t *testing.T) {
+func TestMean(t *testing.T) {
 	type args struct {
 		input []float64
 	}
@@ -16,8 +16,8 @@ func Test_mean(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := mean(tt.args.input); got != tt.want {
-				t.Errorf("mean() = %v, want %v", got, tt.want)
+			if got := Mean(tt.args.input); got != tt.want {
+				t.Errorf("Mean() = %v, want %v", got, tt.want)
 			}
 		})
 	}
