@@ -1,6 +1,9 @@
 package stats
 
-import "testing"
+import (
+	"math/rand"
+	"testing"
+)
 
 func TestMean(t *testing.T) {
 	type args struct {
@@ -25,8 +28,19 @@ func TestMean(t *testing.T) {
 	}
 }
 
-func BenchmarkMean(b *testing.B) {
+func benchmarkMean(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Mean([]float64{5.1, 5.3, 6.0, 4.2, 5.0, 5.3, 4.9, 5.1, 5.2, 5.7, 4.6})
+		Mean(s)
 	}
 }
+
+func BenchmarkMean1(b *testing.B) { benchmarkMean(1, b) }
+func BenchmarkMean2(b *testing.B) { benchmarkMean(2, b) }
+func BenchmarkMean3(b *testing.B) { benchmarkMean(10, b) }
+func BenchmarkMean4(b *testing.B) { benchmarkMean(1e3, b) }
+func BenchmarkMean5(b *testing.B) { benchmarkMean(1e6, b) }
