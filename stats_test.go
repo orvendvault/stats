@@ -150,14 +150,16 @@ func TestMin(t *testing.T) {
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 1.0},
 	}
 	for _, tt := range tests {
-		got := Min(tt.args.input)
-		if math.IsNaN(got) || math.IsNaN(tt.want) {
-			if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Min(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Min() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
 				t.Errorf("Min() = %v, want %v", got, tt.want)
 			}
-		} else if got != tt.want {
-			t.Errorf("Min() = %v, want %v", got, tt.want)
-		}
+		})
 	}
 }
 
@@ -175,14 +177,16 @@ func TestRange(t *testing.T) {
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 5.0},
 	}
 	for _, tt := range tests {
-		got := Range(tt.args.input)
-		if math.IsNaN(got) || math.IsNaN(tt.want) {
-			if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Range(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Range() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
 				t.Errorf("Range() = %v, want %v", got, tt.want)
 			}
-		} else if got != tt.want {
-			t.Errorf("Range() = %v, want %v", got, tt.want)
-		}
+		})
 	}
 }
 
@@ -225,6 +229,141 @@ func TestVarianceSample(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := VarianceSample(tt.args.input); math.Abs(got-tt.want) > 1e6 {
 				t.Errorf("VarianceSample() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestQuartile1(t *testing.T) {
+	type args struct {
+		input []float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 1.5},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 1.5},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 1.5},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 1.5},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			defer handlepanic()
+			got := Quartile1(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Quartile1() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
+				t.Errorf("Quartile1() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestQuartile2(t *testing.T) {
+	type args struct {
+		input []float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.5},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
+		{"two values case", args{[]float64{1.0, 9.0}}, 5.0},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			defer handlepanic()
+			got := Quartile2(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Quartile2() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
+				t.Errorf("Quartile2() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestQuartile3(t *testing.T) {
+	type args struct {
+		input []float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 3.5},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 4.5},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 3.5},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 4.5},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			defer handlepanic()
+			got := Quartile3(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Quartile3() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
+				t.Errorf("Quartile3() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestInterQuartileRange(t *testing.T) {
+	type args struct {
+		input []float64
+	}
+	tests := []struct {
+		name string
+		args args
+		want float64
+	}{
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.0},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.0},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			defer handlepanic()
+			got := InterQuartileRange(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("InterQuartileRange() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
+				t.Errorf("InterQuartileRange() = %v, want %v", got, tt.want)
 			}
 		})
 	}
