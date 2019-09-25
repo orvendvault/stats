@@ -55,13 +55,18 @@ func TestMax(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty case", args{[]float64{}}, 0.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 5.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 6.0},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Max(tt.args.input); got != tt.want {
+			got := Max(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Max() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
 				t.Errorf("Max() = %v, want %v", got, tt.want)
 			}
 		})
@@ -77,16 +82,19 @@ func TestMin(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty case", args{[]float64{}}, 0.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 5.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 1.0},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Min(tt.args.input); got != tt.want {
+		got := Min(tt.args.input)
+		if math.IsNaN(got) || math.IsNaN(tt.want) {
+			if !math.IsNaN(got) || !math.IsNaN(tt.want) {
 				t.Errorf("Min() = %v, want %v", got, tt.want)
 			}
-		})
+		} else if got != tt.want {
+			t.Errorf("Min() = %v, want %v", got, tt.want)
+		}
 	}
 }
 
@@ -104,11 +112,14 @@ func TestRange(t *testing.T) {
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 5.0},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := Range(tt.args.input); got != tt.want {
+		got := Range(tt.args.input)
+		if math.IsNaN(got) || math.IsNaN(tt.want) {
+			if !math.IsNaN(got) || !math.IsNaN(tt.want) {
 				t.Errorf("Range() = %v, want %v", got, tt.want)
 			}
-		})
+		} else if got != tt.want {
+			t.Errorf("Range() = %v, want %v", got, tt.want)
+		}
 	}
 }
 

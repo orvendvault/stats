@@ -19,7 +19,7 @@ func Mean(input []float64) float64 {
 // Max returns the maximum value of the sample
 func Max(input []float64) float64 {
 	if len(input) == 0 {
-		return 0
+		return math.NaN()
 	}
 	max := input[0]
 	for i := 1; i < len(input); i++ {
