@@ -4,10 +4,6 @@ import (
 	"math"
 )
 
-/*
-   In this file there are implemented basic statistical functionalities to perform descriptive statistical analysis on a sample
-*/
-
 // Mean returns the mean of the slice.
 func Mean(input []float64) float64 {
 	if len(input) == 0 {
@@ -37,7 +33,7 @@ func Max(input []float64) float64 {
 // Min returns the minimum value of the sample
 func Min(input []float64) float64 {
 	if len(input) == 0 {
-		return 0
+		return math.NaN()
 	}
 	min := input[0]
 	for i := 1; i < len(input); i++ {
@@ -50,22 +46,16 @@ func Min(input []float64) float64 {
 
 // Range returns the difference between the largest and smallest values
 func Range(input []float64) float64 {
-	if len(input) == 0 {
-		return 0
-	}
-	if len(input) == 1 {
-		return 0
+	if len(input) < 2 {
+		return math.NaN()
 	}
 	return Max(input) - Min(input)
 }
 
 // sumOfSquaredDifferences returns the sum of the squared differences of each observation from the mean
 func sumOfSquaredDifferences(input []float64) float64 {
-	if len(input) == 0 {
-		return 0
-	}
-	if len(input) == 1 {
-		return 0
+	if len(input) < 2 {
+		return math.NaN()
 	}
 	mean := Mean(input)
 	ssd := 0.0
@@ -82,12 +72,6 @@ func StandardDeviationSample(input []float64) float64 {
 
 // VarianceSample returns the variance of the sample
 func VarianceSample(input []float64) float64 {
-	if len(input) == 0 {
-		return 0
-	}
-	if len(input) == 1 {
-		return 0
-	}
 	num := sumOfSquaredDifferences(input)
 	den := float64(len(input) - 1)
 	return num / den

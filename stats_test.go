@@ -99,7 +99,7 @@ func TestRange(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty case", args{[]float64{}}, 0.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 0.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 5.0},
 	}
@@ -121,8 +121,8 @@ func TestStandardDeviationSample(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty case", args{[]float64{}}, 0.0},
-		{"single value case", args{[]float64{1.0}}, 0.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
 		{"normal case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, 1.7, 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, 0.542548},
 	}
 	for _, tt := range tests {
@@ -143,8 +143,8 @@ func TestVarianceSample(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty case", args{[]float64{}}, 0.0},
-		{"single value case", args{[]float64{1.0}}, 0.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
 		{"normal case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, 1.7, 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, 0.294358},
 	}
 	for _, tt := range tests {
