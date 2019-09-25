@@ -77,46 +77,46 @@ func VarianceSample(input []float64) float64 {
 	return num / den
 }
 
-// Quartile1 returns the first quartile
-func Quartile1(input []float64) (Q1 float64) {
-	if len(input) == 0 {
-		return 0
-	}
-	if len(input) == 1 {
-		return 0
-	}
+// // Quartile1 returns the first quartile
+// func Quartile1(input []float64) (Q1 float64) {
+// 	if len(input) == 0 {
+// 		return 0
+// 	}
+// 	if len(input) == 1 {
+// 		return 0
+// 	}
 
-	if len(input)%2 == 0 {
-		Q1 = Median(input[:len(input)/2-1])
-	} else {
-		Q1 = Median(input[:len(input)/2-1])
-	}
-	return Q1
-}
+// 	if len(input)%2 == 0 {
+// 		Q1 = Median(input[:len(input)/2-1])
+// 	} else {
+// 		Q1 = Median(input[:len(input)/2-1])
+// 	}
+// 	return Q1
+// }
 
-// Quartile2 returns the second quartile (equivalent to the median)
-func Quartile2(input []float64) float64 {
-	return Median(input)
-}
+// // Quartile2 returns the second quartile (equivalent to the median)
+// func Quartile2(input []float64) float64 {
+// 	return Median(input)
+// }
 
-// Quartile3 returns the third quartile
-func Quartile3(input []float64) (Q3 float64) {
-	if len(input) == 0 {
-		return 0
-	}
-	if len(input) == 1 {
-		return 0
-	}
+// // Quartile3 returns the third quartile
+// func Quartile3(input []float64) (Q3 float64) {
+// 	if len(input) == 0 {
+// 		return 0
+// 	}
+// 	if len(input) == 1 {
+// 		return 0
+// 	}
 
-	if len(input)%2 == 0 {
-		Q3 = Median(input[len(input)/2:])
-	} else {
-		Q3 = Median(input[len(input)/2+1:])
-	}
-	return Q3
-}
+// 	if len(input)%2 == 0 {
+// 		Q3 = Median(input[len(input)/2:])
+// 	} else {
+// 		Q3 = Median(input[len(input)/2+1:])
+// 	}
+// 	return Q3
+// }
 
-// InterQuartileRange returns the difference between the third and the first quartiles
-func InterQuartileRange(input []float64) float64 {
-	return Quartile3(input) - Quartile1(input)
-}
+// // InterQuartileRange returns the difference between the third and the first quartiles
+// func InterQuartileRange(input []float64) float64 {
+// 	return Quartile3(input) - Quartile1(input)
+// }
