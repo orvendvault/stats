@@ -1,6 +1,8 @@
 package stats
 
 import (
+	"fmt"
+	"math"
 	"math/rand"
 	"testing"
 )
@@ -14,14 +16,20 @@ func TestMean(t *testing.T) {
 		args args
 		want float64
 	}{
-		{"empty", args{[]float64{}}, 0},
+		{"empty", args{[]float64{}}, math.NaN()},
 		{"equal", args{[]float64{5.0, 5.0, 5.0}}, 5.0},
 		{"different", args{[]float64{5.0, 10.0, 0.0}}, 5.0},
 		{"different2", args{[]float64{5.0, 10.0}}, 7.5},
+		{"nan", args{[]float64{5.0, math.NaN()}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Mean(tt.args.input); got != tt.want {
+			got := Mean(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Mean() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
 				t.Errorf("Mean() = %v, want %v", got, tt.want)
 			}
 		})
@@ -58,16 +66,29 @@ func TestMedian(t *testing.T) {
 		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
 		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5},
 		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
-		{"empty case", args{[]float64{}}, 0},
-		{"single value case", args{[]float64{1.0}}, 1.0},
+		{"empty case", args{[]float64{}}, math.NaN()},
+		{"single value case", args{[]float64{1.0}}, math.NaN()},
 		{"two values case", args{[]float64{1.0, 9.0}}, 5.0},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Median(tt.args.input); got != tt.want {
+			defer handlepanic()
+			got := Median(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Median() = %v, want %v", got, tt.want)
+				}
+			} else if got != tt.want {
 				t.Errorf("Median() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func handlepanic() {
+	if r := recover(); r != nil {
+		fmt.Println("Recover", r)
 	}
 }
 
