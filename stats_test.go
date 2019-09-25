@@ -190,7 +190,7 @@ func TestRange(t *testing.T) {
 	}
 }
 
-func TestStandardDeviationSample(t *testing.T) {
+func TestStdDev(t *testing.T) {
 	type args struct {
 		input []float64
 	}
@@ -205,14 +205,14 @@ func TestStandardDeviationSample(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := StandardDeviationSample(tt.args.input); math.Abs(got-tt.want) > 1e6 {
-				t.Errorf("StandardDeviationSample() = %v, want %v", got, tt.want)
+			if got := StdDev(tt.args.input); math.Abs(got-tt.want) > 1e6 {
+				t.Errorf("StdDev() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestVarianceSample(t *testing.T) {
+func TestVariance(t *testing.T) {
 	type args struct {
 		input []float64
 	}
@@ -227,30 +227,30 @@ func TestVarianceSample(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := VarianceSample(tt.args.input); math.Abs(got-tt.want) > 1e6 {
-				t.Errorf("VarianceSample() = %v, want %v", got, tt.want)
+			if got := Variance(tt.args.input); math.Abs(got-tt.want) > 1e6 {
+				t.Errorf("Variance() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func benchmarkVarianceSample(len int, b *testing.B) {
+func benchmarkVariance(len int, b *testing.B) {
 	s := make([]float64, len)
 	for e := 0; e <= len-1; e++ {
 		s[e] = rand.Float64()
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		VarianceSample(s)
+		Variance(s)
 	}
 }
 
-func BenchmarkVarianceSample0(b *testing.B)   { benchmarkVarianceSample(0, b) }
-func BenchmarkVarianceSample1(b *testing.B)   { benchmarkVarianceSample(1, b) }
-func BenchmarkVarianceSample2(b *testing.B)   { benchmarkVarianceSample(2, b) }
-func BenchmarkVarianceSample10(b *testing.B)  { benchmarkVarianceSample(10, b) }
-func BenchmarkVarianceSample1e3(b *testing.B) { benchmarkVarianceSample(1e3, b) }
-func BenchmarkVarianceSample1e6(b *testing.B) { benchmarkVarianceSample(1e6, b) }
+func BenchmarkVariance0(b *testing.B)   { benchmarkVariance(0, b) }
+func BenchmarkVariance1(b *testing.B)   { benchmarkVariance(1, b) }
+func BenchmarkVariance2(b *testing.B)   { benchmarkVariance(2, b) }
+func BenchmarkVariance10(b *testing.B)  { benchmarkVariance(10, b) }
+func BenchmarkVariance1e3(b *testing.B) { benchmarkVariance(1e3, b) }
+func BenchmarkVariance1e6(b *testing.B) { benchmarkVariance(1e6, b) }
 
 func TestQuartile1(t *testing.T) {
 	type args struct {

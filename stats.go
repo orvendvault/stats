@@ -84,13 +84,13 @@ func sumOfSquaredDifferences(input []float64) float64 {
 	return ssd
 }
 
-// StandardDeviationSample returns the standard deviation of the sample
-func StandardDeviationSample(input []float64) float64 {
-	return math.Sqrt(VarianceSample(input))
+// StdDev returns the standard deviation of the sample
+func StdDev(input []float64) float64 {
+	return math.Sqrt(Variance(input))
 }
 
-// VarianceSample returns the variance of the sample
-func VarianceSample(input []float64) float64 {
+// Variance returns the variance of the sample
+func Variance(input []float64) float64 {
 	return sumOfSquaredDifferences(input) / float64(len(input)-1)
 }
 
