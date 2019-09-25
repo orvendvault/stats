@@ -91,9 +91,7 @@ func StandardDeviationSample(input []float64) float64 {
 
 // VarianceSample returns the variance of the sample
 func VarianceSample(input []float64) float64 {
-	num := sumOfSquaredDifferences(input)
-	den := float64(len(input) - 1)
-	return num / den
+	return sumOfSquaredDifferences(input) / float64(len(input)-1)
 }
 
 // Quartile1 returns the first quartile

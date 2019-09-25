@@ -234,6 +234,24 @@ func TestVarianceSample(t *testing.T) {
 	}
 }
 
+func benchmarkVarianceSample(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		VarianceSample(s)
+	}
+}
+
+func BenchmarkVarianceSample0(b *testing.B)   { benchmarkVarianceSample(0, b) }
+func BenchmarkVarianceSample1(b *testing.B)   { benchmarkVarianceSample(1, b) }
+func BenchmarkVarianceSample2(b *testing.B)   { benchmarkVarianceSample(2, b) }
+func BenchmarkVarianceSample10(b *testing.B)  { benchmarkVarianceSample(10, b) }
+func BenchmarkVarianceSample1e3(b *testing.B) { benchmarkVarianceSample(1e3, b) }
+func BenchmarkVarianceSample1e6(b *testing.B) { benchmarkVarianceSample(1e6, b) }
+
 func TestQuartile1(t *testing.T) {
 	type args struct {
 		input []float64
