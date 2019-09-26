@@ -42,6 +42,9 @@ func Max(input []float64) float64 {
 	}
 	max := input[0]
 	for i := 1; i < len(input); i++ {
+		if math.IsNaN(input[i]) {
+			return math.NaN()
+		}
 		if input[i] > max {
 			max = input[i]
 		}
@@ -56,6 +59,9 @@ func Min(input []float64) float64 {
 	}
 	min := input[0]
 	for i := 1; i < len(input); i++ {
+		if math.IsNaN(input[i]) {
+			return math.NaN()
+		}
 		if input[i] < min {
 			min = input[i]
 		}

@@ -122,6 +122,7 @@ func TestMax(t *testing.T) {
 		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 5.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 6.0},
+		{"NaN case", args{[]float64{1.0, 5.0, math.NaN(), 6.0, 1.0, 2.0, 3.0}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -148,6 +149,7 @@ func TestMin(t *testing.T) {
 		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 5.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 1.0},
+		{"NaN case", args{[]float64{1.0, 5.0, math.NaN(), 6.0, 1.0, 2.0, 3.0}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -175,6 +177,7 @@ func TestRange(t *testing.T) {
 		{"empty case", args{[]float64{}}, math.NaN()},
 		{"equal case", args{[]float64{5.0, 5.0, 5.0, 5.0}}, 0.0},
 		{"normal case", args{[]float64{1.0, 5.0, 2.0, 6.0, 1.0, 2.0, 3.0}}, 5.0},
+		{"NaN case", args{[]float64{1.0, 5.0, math.NaN(), 6.0, 1.0, 2.0, 3.0}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -202,10 +205,16 @@ func TestStdDev(t *testing.T) {
 		{"empty case", args{[]float64{}}, math.NaN()},
 		{"single value case", args{[]float64{1.0}}, math.NaN()},
 		{"normal case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, 1.7, 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, 0.542548},
+		{"NaN case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, math.NaN(), 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := StdDev(tt.args.input); math.Abs(got-tt.want) > 1e6 {
+			got := StdDev(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Range() = %v, want %v", got, tt.want)
+				}
+			} else if math.Abs(got-tt.want) > 1e6 {
 				t.Errorf("StdDev() = %v, want %v", got, tt.want)
 			}
 		})
@@ -224,10 +233,16 @@ func TestVariance(t *testing.T) {
 		{"empty case", args{[]float64{}}, math.NaN()},
 		{"single value case", args{[]float64{1.0}}, math.NaN()},
 		{"normal case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, 1.7, 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, 0.294358},
+		{"NaN case", args{[]float64{1.0, 2.0, 3.0, 2.3, 1.4, math.NaN(), 1.5, 1.5, 1.8, 2.6, 2.3, 2.0, 2.2}}, math.NaN()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Variance(tt.args.input); math.Abs(got-tt.want) > 1e6 {
+			got := Variance(tt.args.input)
+			if math.IsNaN(got) || math.IsNaN(tt.want) {
+				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
+					t.Errorf("Range() = %v, want %v", got, tt.want)
+				}
+			} else if math.Abs(got-tt.want) > 1e6 {
 				t.Errorf("Variance() = %v, want %v", got, tt.want)
 			}
 		})
