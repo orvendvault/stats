@@ -1,9 +1,9 @@
 package stats
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
+	"sort"
 	"testing"
 )
 
@@ -47,33 +47,40 @@ func benchmarkMean(len int, b *testing.B) {
 	}
 }
 
-func BenchmarkMean1(b *testing.B) { benchmarkMean(1, b) }
-func BenchmarkMean2(b *testing.B) { benchmarkMean(2, b) }
-func BenchmarkMean3(b *testing.B) { benchmarkMean(10, b) }
-func BenchmarkMean4(b *testing.B) { benchmarkMean(1e3, b) }
-func BenchmarkMean5(b *testing.B) { benchmarkMean(1e6, b) }
+func BenchmarkMean1(b *testing.B)   { benchmarkMean(1, b) }
+func BenchmarkMean2(b *testing.B)   { benchmarkMean(2, b) }
+func BenchmarkMean10(b *testing.B)  { benchmarkMean(10, b) }
+func BenchmarkMean1e3(b *testing.B) { benchmarkMean(1e3, b) }
+func BenchmarkMean1e6(b *testing.B) { benchmarkMean(1e6, b) }
 
 func TestMedian(t *testing.T) {
 	type args struct {
 		input []float64
 	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name      string
+		args      args
+		want      float64
+		wantPanic bool
 	}{
-		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.5},
-		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
-		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5},
-		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
-		{"empty case", args{[]float64{}}, math.NaN()},
-		{"single value case", args{[]float64{1.0}}, math.NaN()},
-		{"two values case", args{[]float64{1.0, 9.0}}, 5.0},
-		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.5, false},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0, false},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5, true},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0, true},
+		{"empty case", args{[]float64{}}, math.NaN(), false},
+		{"single value case", args{[]float64{1.0}}, math.NaN(), false},
+		{"two values case", args{[]float64{1.0, 9.0}}, 5.0, false},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN(), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer handlepanic()
+			defer func() {
+				if r := recover(); r != nil {
+					if !tt.wantPanic {
+						t.Error("Median() want panic")
+					}
+				}
+			}()
 			got := Median(tt.args.input)
 			if math.IsNaN(got) || math.IsNaN(tt.want) {
 				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
@@ -86,29 +93,24 @@ func TestMedian(t *testing.T) {
 	}
 }
 
-func handlepanic() {
-	if r := recover(); r != nil {
-		fmt.Println("Recover", r)
-	}
-}
-
 func benchmarkMedian(len int, b *testing.B) {
 	s := make([]float64, len)
 	for e := 0; e <= len-1; e++ {
 		s[e] = rand.Float64()
 	}
+	sort.Float64s(s)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Median(s)
 	}
 }
 
-func BenchmarkMedian0(b *testing.B)   { benchmarkMean(0, b) }
-func BenchmarkMedian1(b *testing.B)   { benchmarkMean(1, b) }
-func BenchmarkMedian2(b *testing.B)   { benchmarkMean(2, b) }
-func BenchmarkMedian10(b *testing.B)  { benchmarkMean(10, b) }
-func BenchmarkMedian1e3(b *testing.B) { benchmarkMean(1e3, b) }
-func BenchmarkMedian1e6(b *testing.B) { benchmarkMean(1e6, b) }
+func BenchmarkMedian0(b *testing.B)   { benchmarkMedian(0, b) }
+func BenchmarkMedian1(b *testing.B)   { benchmarkMedian(1, b) }
+func BenchmarkMedian2(b *testing.B)   { benchmarkMedian(2, b) }
+func BenchmarkMedian10(b *testing.B)  { benchmarkMedian(10, b) }
+func BenchmarkMedian1e3(b *testing.B) { benchmarkMedian(1e3, b) }
+func BenchmarkMedian1e6(b *testing.B) { benchmarkMedian(1e6, b) }
 
 func TestMax(t *testing.T) {
 	type args struct {
@@ -137,6 +139,25 @@ func TestMax(t *testing.T) {
 		})
 	}
 }
+
+func benchmarkMax(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Max(s)
+	}
+}
+
+func BenchmarkMax0(b *testing.B)   { benchmarkMax(0, b) }
+func BenchmarkMax1(b *testing.B)   { benchmarkMax(1, b) }
+func BenchmarkMax2(b *testing.B)   { benchmarkMax(2, b) }
+func BenchmarkMax10(b *testing.B)  { benchmarkMax(10, b) }
+func BenchmarkMax1e3(b *testing.B) { benchmarkMax(1e3, b) }
+func BenchmarkMax1e6(b *testing.B) { benchmarkMax(1e6, b) }
+
 func TestMin(t *testing.T) {
 	type args struct {
 		input []float64
@@ -164,6 +185,24 @@ func TestMin(t *testing.T) {
 		})
 	}
 }
+
+func benchmarkMin(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Min(s)
+	}
+}
+
+func BenchmarkMin0(b *testing.B)   { benchmarkMin(0, b) }
+func BenchmarkMin1(b *testing.B)   { benchmarkMin(1, b) }
+func BenchmarkMin2(b *testing.B)   { benchmarkMin(2, b) }
+func BenchmarkMin10(b *testing.B)  { benchmarkMin(10, b) }
+func BenchmarkMin1e3(b *testing.B) { benchmarkMin(1e3, b) }
+func BenchmarkMin1e6(b *testing.B) { benchmarkMin(1e6, b) }
 
 func TestRange(t *testing.T) {
 	type args struct {
@@ -193,6 +232,24 @@ func TestRange(t *testing.T) {
 	}
 }
 
+func benchmarkRange(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Range(s)
+	}
+}
+
+func BenchmarkRange0(b *testing.B)   { benchmarkRange(0, b) }
+func BenchmarkRange1(b *testing.B)   { benchmarkRange(1, b) }
+func BenchmarkRange2(b *testing.B)   { benchmarkRange(2, b) }
+func BenchmarkRange10(b *testing.B)  { benchmarkRange(10, b) }
+func BenchmarkRange1e3(b *testing.B) { benchmarkRange(1e3, b) }
+func BenchmarkRange1e6(b *testing.B) { benchmarkRange(1e6, b) }
+
 func TestStdDev(t *testing.T) {
 	type args struct {
 		input []float64
@@ -220,6 +277,24 @@ func TestStdDev(t *testing.T) {
 		})
 	}
 }
+
+func benchmarkStdDev(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		StdDev(s)
+	}
+}
+
+func BenchmarkStdDev0(b *testing.B)   { benchmarkStdDev(0, b) }
+func BenchmarkStdDev1(b *testing.B)   { benchmarkStdDev(1, b) }
+func BenchmarkStdDev2(b *testing.B)   { benchmarkStdDev(2, b) }
+func BenchmarkStdDev10(b *testing.B)  { benchmarkStdDev(10, b) }
+func BenchmarkStdDev1e3(b *testing.B) { benchmarkStdDev(1e3, b) }
+func BenchmarkStdDev1e6(b *testing.B) { benchmarkStdDev(1e6, b) }
 
 func TestVariance(t *testing.T) {
 	type args struct {
@@ -272,23 +347,30 @@ func TestQuartile1(t *testing.T) {
 		input []float64
 	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name      string
+		args      args
+		want      float64
+		wantPanic bool
 	}{
-		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 1.5},
-		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 1.5},
-		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 1.5},
-		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 1.5},
-		{"empty case", args{[]float64{}}, math.NaN()},
-		{"single value case", args{[]float64{1.0}}, math.NaN()},
-		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
-		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
-		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 1.5, false},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 1.5, false},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 1.5, true},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 1.5, true},
+		{"empty case", args{[]float64{}}, math.NaN(), false},
+		{"single value case", args{[]float64{1.0}}, math.NaN(), false},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN(), false},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN(), false},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN(), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer handlepanic()
+			defer func() {
+				if r := recover(); r != nil {
+					if !tt.wantPanic {
+						t.Error("Quartile2() want panic")
+					}
+				}
+			}()
 			got := Quartile1(tt.args.input)
 			if math.IsNaN(got) || math.IsNaN(tt.want) {
 				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
@@ -301,27 +383,53 @@ func TestQuartile1(t *testing.T) {
 	}
 }
 
+func benchmarkQuartile1(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	sort.Float64s(s)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Quartile1(s)
+	}
+}
+
+func BenchmarkQuartile10(b *testing.B)   { benchmarkQuartile1(0, b) }
+func BenchmarkQuartile11(b *testing.B)   { benchmarkQuartile1(1, b) }
+func BenchmarkQuartile12(b *testing.B)   { benchmarkQuartile1(2, b) }
+func BenchmarkQuartile110(b *testing.B)  { benchmarkQuartile1(10, b) }
+func BenchmarkQuartile11e3(b *testing.B) { benchmarkQuartile1(1e3, b) }
+func BenchmarkQuartile11e6(b *testing.B) { benchmarkQuartile1(1e6, b) }
+
 func TestQuartile2(t *testing.T) {
 	type args struct {
 		input []float64
 	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name      string
+		args      args
+		want      float64
+		wantPanic bool
 	}{
-		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.5},
-		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
-		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5},
-		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
-		{"empty case", args{[]float64{}}, math.NaN()},
-		{"single value case", args{[]float64{1.0}}, math.NaN()},
-		{"two values case", args{[]float64{1.0, 9.0}}, 5.0},
-		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.5, false},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0, false},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.5, true},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0, true},
+		{"empty case", args{[]float64{}}, math.NaN(), false},
+		{"single value case", args{[]float64{1.0}}, math.NaN(), false},
+		{"two values case", args{[]float64{1.0, 9.0}}, 5.0, false},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN(), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer handlepanic()
+			defer func() {
+				if r := recover(); r != nil {
+					if !tt.wantPanic {
+						t.Error("Quartile2() want panic")
+					}
+				}
+			}()
 			got := Quartile2(tt.args.input)
 			if math.IsNaN(got) || math.IsNaN(tt.want) {
 				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
@@ -334,28 +442,54 @@ func TestQuartile2(t *testing.T) {
 	}
 }
 
+func benchmarkQuartile2(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	sort.Float64s(s)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Quartile2(s)
+	}
+}
+
+func BenchmarkQuartile20(b *testing.B)   { benchmarkQuartile2(0, b) }
+func BenchmarkQuartile21(b *testing.B)   { benchmarkQuartile2(1, b) }
+func BenchmarkQuartile22(b *testing.B)   { benchmarkQuartile2(2, b) }
+func BenchmarkQuartile210(b *testing.B)  { benchmarkQuartile2(10, b) }
+func BenchmarkQuartile21e3(b *testing.B) { benchmarkQuartile2(1e3, b) }
+func BenchmarkQuartile21e6(b *testing.B) { benchmarkQuartile2(1e6, b) }
+
 func TestQuartile3(t *testing.T) {
 	type args struct {
 		input []float64
 	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name      string
+		args      args
+		want      float64
+		wantPanic bool
 	}{
-		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 3.5},
-		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 4.5},
-		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 3.5},
-		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 4.5},
-		{"empty case", args{[]float64{}}, math.NaN()},
-		{"single value case", args{[]float64{1.0}}, math.NaN()},
-		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
-		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
-		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 3.5, false},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 4.5, false},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 3.5, true},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 4.5, true},
+		{"empty case", args{[]float64{}}, math.NaN(), false},
+		{"single value case", args{[]float64{1.0}}, math.NaN(), false},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN(), false},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN(), false},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN(), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer handlepanic()
+			defer func() {
+				if r := recover(); r != nil {
+					if !tt.wantPanic {
+						t.Error("Quartile3() want panic")
+					}
+				}
+			}()
 			got := Quartile3(tt.args.input)
 			if math.IsNaN(got) || math.IsNaN(tt.want) {
 				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
@@ -368,28 +502,54 @@ func TestQuartile3(t *testing.T) {
 	}
 }
 
+func benchmarkQuartile3(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	sort.Float64s(s)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Quartile3(s)
+	}
+}
+
+func BenchmarkQuartile30(b *testing.B)   { benchmarkQuartile3(0, b) }
+func BenchmarkQuartile31(b *testing.B)   { benchmarkQuartile3(1, b) }
+func BenchmarkQuartile32(b *testing.B)   { benchmarkQuartile3(2, b) }
+func BenchmarkQuartile310(b *testing.B)  { benchmarkQuartile3(10, b) }
+func BenchmarkQuartile31e3(b *testing.B) { benchmarkQuartile3(1e3, b) }
+func BenchmarkQuartile31e6(b *testing.B) { benchmarkQuartile3(1e6, b) }
+
 func TestInterQuartileRange(t *testing.T) {
 	type args struct {
 		input []float64
 	}
 	tests := []struct {
-		name string
-		args args
-		want float64
+		name      string
+		args      args
+		want      float64
+		wantPanic bool
 	}{
-		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.0},
-		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0},
-		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.0},
-		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0},
-		{"empty case", args{[]float64{}}, math.NaN()},
-		{"single value case", args{[]float64{1.0}}, math.NaN()},
-		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN()},
-		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN()},
-		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN()},
+		{"even case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0}}, 2.0, false},
+		{"odd case sorted", args{[]float64{1.0, 2.0, 3.0, 4.0, 5.0}}, 3.0, false},
+		{"even case unsorted", args{[]float64{4.0, 2.0, 1.0, 3.0}}, 2.0, true},
+		{"odd case unsorted", args{[]float64{4.0, 3.0, 5.0, 1.0, 2.0}}, 3.0, true},
+		{"empty case", args{[]float64{}}, math.NaN(), false},
+		{"single value case", args{[]float64{1.0}}, math.NaN(), false},
+		{"two values case", args{[]float64{1.0, 9.0}}, math.NaN(), false},
+		{"three values case", args{[]float64{1.0, 9.0, 11.0}}, math.NaN(), false},
+		{"nan", args{[]float64{math.NaN(), 5.0}}, math.NaN(), false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			defer handlepanic()
+			defer func() {
+				if r := recover(); r != nil {
+					if !tt.wantPanic {
+						t.Error("InterQuartileRange() want panic")
+					}
+				}
+			}()
 			got := InterQuartileRange(tt.args.input)
 			if math.IsNaN(got) || math.IsNaN(tt.want) {
 				if !math.IsNaN(got) || !math.IsNaN(tt.want) {
@@ -401,3 +561,22 @@ func TestInterQuartileRange(t *testing.T) {
 		})
 	}
 }
+
+func benchmarkInterQuartileRange(len int, b *testing.B) {
+	s := make([]float64, len)
+	for e := 0; e <= len-1; e++ {
+		s[e] = rand.Float64()
+	}
+	sort.Float64s(s)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		InterQuartileRange(s)
+	}
+}
+
+func BenchmarkInterQuartileRange0(b *testing.B)   { benchmarkInterQuartileRange(0, b) }
+func BenchmarkInterQuartileRange1(b *testing.B)   { benchmarkInterQuartileRange(1, b) }
+func BenchmarkInterQuartileRange2(b *testing.B)   { benchmarkInterQuartileRange(2, b) }
+func BenchmarkInterQuartileRange10(b *testing.B)  { benchmarkInterQuartileRange(10, b) }
+func BenchmarkInterQuartileRange1e3(b *testing.B) { benchmarkInterQuartileRange(1e3, b) }
+func BenchmarkInterQuartileRange1e6(b *testing.B) { benchmarkInterQuartileRange(1e6, b) }
