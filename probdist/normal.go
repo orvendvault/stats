@@ -10,7 +10,7 @@ type Normal struct {
 	Sigma float64
 }
 
-// CDF returns the cumulative probability density function output of the normal distribution for a given x
+// CDF returns the cumulative distribution function output of the normal distribution for a given x
 func (norm Normal) CDF(x float64) float64 {
 	return 0.5 * (1 + math.Erf((x-norm.Mu)/(math.Sqrt(2)*norm.Sigma)))
 }
