@@ -4,19 +4,23 @@ import (
 	"math"
 )
 
-type binomial struct {
-	n float64
-	p float64
+// Binomial is used to represent the binomial distribution parameters
+type Binomial struct {
+	N float64
+	P float64
 }
 
-func (bin binomial) Mean() float64 {
-	return bin.n * bin.p
+// Mean returns the mean of the binomial distribution
+func (bin Binomial) Mean() float64 {
+	return bin.N * bin.P
 }
 
-func (bin binomial) StdDev() float64 {
+// StdDev returns the standard deviation of the binomial distribution
+func (bin Binomial) StdDev() float64 {
 	return math.Sqrt(bin.Variance())
 }
 
-func (bin binomial) Variance() float64 {
-	return bin.Mean() * (1 - bin.p)
+// Variance returns the variance of the binomial distribution
+func (bin Binomial) Variance() float64 {
+	return bin.Mean() * (1 - bin.P)
 }

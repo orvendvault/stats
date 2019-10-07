@@ -4,18 +4,22 @@ import (
 	"math"
 )
 
-type poisson struct {
-	lambda float64
+// Poisson is used to represent the poisson distribution parameters
+type Poisson struct {
+	Lambda float64
 }
 
-func (p poisson) Mean() float64 {
-	return p.lambda
+// Mean returns the mean of the poisson distribution
+func (p Poisson) Mean() float64 {
+	return p.Lambda
 }
 
-func (p poisson) StdDev() float64 {
+// StdDev returns the standard deviation of the poisson distribution
+func (p Poisson) StdDev() float64 {
 	return math.Sqrt(p.Variance())
 }
 
-func (p poisson) Variance() float64 {
-	return p.lambda
+// Variance returns the variance of the poisson distribution
+func (p Poisson) Variance() float64 {
+	return p.Lambda
 }

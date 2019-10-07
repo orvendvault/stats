@@ -4,19 +4,23 @@ import (
 	"math"
 )
 
-type gamma struct {
-	k     float64
-	theta float64
+// Gamma is used to represent the gamma distribution parameters
+type Gamma struct {
+	K     float64
+	Theta float64
 }
 
-func (g gamma) Mean() float64 {
-	return g.k * g.theta
+// Mean returns the mean of the gamma distribution
+func (g Gamma) Mean() float64 {
+	return g.K * g.Theta
 }
 
-func (g gamma) StdDev() float64 {
+// StdDev returns the standard deviation of the gamma distribution
+func (g Gamma) StdDev() float64 {
 	return math.Sqrt(g.Variance())
 }
 
-func (g gamma) Variance() float64 {
-	return g.k * g.theta * g.theta
+// Variance returns the variance of the gamma distribution
+func (g Gamma) Variance() float64 {
+	return g.K * g.Theta * g.Theta
 }

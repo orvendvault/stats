@@ -4,27 +4,33 @@ import (
 	"math"
 )
 
-type normal struct {
-	mu    float64
-	sigma float64
+// Normal is used to represent the normal distribution parameters
+type Normal struct {
+	Mu    float64
+	Sigma float64
 }
 
-func (norm normal) CDF(x float64) float64 {
-	return 0.5 * (1 + math.Erfc((x-norm.mu)/math.Sqrt(2)*norm.sigma))
+// CDF returns the cumulative probability density function output of the normal distribution for a given x
+func (norm Normal) CDF(x float64) float64 {
+	return 0.5 * (1 + math.Erf((x-norm.Mu)/(math.Sqrt(2)*norm.Sigma)))
 }
 
-func (norm normal) Mean() float64 {
-	return norm.mu
+// Mean returns the mean of the normal distribution
+func (norm Normal) Mean() float64 {
+	return norm.Mu
 }
 
-func (norm normal) Median() float64 {
-	return norm.mu
+// Median returns the median of the normal distribution
+func (norm Normal) Median() float64 {
+	return norm.Mu
 }
 
-func (norm normal) StdDev() float64 {
-	return norm.sigma
+// StdDev returns the standard deviation of the normal distribution
+func (norm Normal) StdDev() float64 {
+	return norm.Sigma
 }
 
-func (norm normal) Variance() float64 {
-	return math.Pow(norm.sigma, 2.0)
+// Variance returns the Variance of the normal distribution
+func (norm Normal) Variance() float64 {
+	return math.Pow(norm.Sigma, 2.0)
 }
