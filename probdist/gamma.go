@@ -10,6 +10,10 @@ type Gamma struct {
 	Theta float64
 }
 
+// NewGamma is used to initialize gamma parameters
+func NewGamma() Gamma {
+	return Gamma{1.0, 2.0}
+}
 // Mean returns the mean of the gamma distribution
 func (g Gamma) Mean() float64 {
 	return g.K * g.Theta

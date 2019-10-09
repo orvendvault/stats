@@ -3,6 +3,7 @@ package stats
 import (
 	"math"
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -174,3 +175,25 @@ func Benchmark_exponential_Variance3(b *testing.B) { benchmarkExponentialVarianc
 func Benchmark_exponential_Variance4(b *testing.B) { benchmarkExponentialVariance(3, b) }
 func Benchmark_exponential_Variance5(b *testing.B) { benchmarkExponentialVariance(1e3, b) }
 func Benchmark_exponential_Variance6(b *testing.B) { benchmarkExponentialVariance(534, b) }
+
+func TestNewExponential(t *testing.T) {
+	tests := []struct {
+		name string
+		want Exponential
+	}{
+		{"Normal case", Exponential{1.0}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewExponential(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewExponential() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewExponential(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewExponential()
+	}
+}

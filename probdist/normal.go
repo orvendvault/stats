@@ -10,6 +10,11 @@ type Normal struct {
 	Sigma float64
 }
 
+// NewNormal is used to initialize normal parameters
+func NewNormal() Normal {
+	return Normal{0.0, 1.0}
+}
+
 // CDF returns the cumulative distribution function output of the normal distribution for a given x
 func (norm Normal) CDF(x float64) float64 {
 	return 0.5 * (1 + math.Erf((x-norm.Mu)/(math.Sqrt(2)*norm.Sigma)))

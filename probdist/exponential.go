@@ -9,6 +9,11 @@ type Exponential struct {
 	Lambda float64
 }
 
+// NewExponential is used to initialize exponential parameters
+func NewExponential() Exponential {
+	return Exponential{1.0}
+}
+
 // CDF returns the cumulative distribution function output for the exponential distribution
 func (exp Exponential) CDF(x float64) float64 {
 	return 1 - math.Pow(math.E, -exp.Lambda*x)

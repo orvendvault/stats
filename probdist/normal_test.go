@@ -3,6 +3,7 @@ package stats
 import (
 	"math"
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -227,3 +228,25 @@ func Benchmark_normal_Variance3(b *testing.B) { benchmarkNormalVariance(15, 365,
 func Benchmark_normal_Variance4(b *testing.B) { benchmarkNormalVariance(3, 8, b) }
 func Benchmark_normal_Variance5(b *testing.B) { benchmarkNormalVariance(1e3, 1, b) }
 func Benchmark_normal_Variance6(b *testing.B) { benchmarkNormalVariance(534, 82, b) }
+
+func TestNewNormal(t *testing.T) {
+	tests := []struct {
+		name string
+		want Normal
+	}{
+		{"Normal case", Normal{0.0, 1.0}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewNormal(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewNormal() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewNormal(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewNormal()
+	}
+}

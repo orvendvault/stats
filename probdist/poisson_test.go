@@ -3,6 +3,7 @@ package stats
 import (
 	"math"
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -128,3 +129,25 @@ func Benchmark_poisson_Variance3(b *testing.B) { benchmarkPoissonVariance(15, b)
 func Benchmark_poisson_Variance4(b *testing.B) { benchmarkPoissonVariance(3, b) }
 func Benchmark_poisson_Variance5(b *testing.B) { benchmarkPoissonVariance(1e3, b) }
 func Benchmark_poisson_Variance6(b *testing.B) { benchmarkPoissonVariance(534, b) }
+
+func TestNewPoisson(t *testing.T) {
+	tests := []struct {
+		name string
+		want Poisson
+	}{
+		{"Normal case", Poisson{1.0}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewPoisson(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewPoisson() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewPoisson(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewPoisson()
+	}
+}

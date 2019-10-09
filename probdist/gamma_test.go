@@ -3,6 +3,7 @@ package stats
 import (
 	"math"
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -134,3 +135,25 @@ func Benchmark_gamma_Variance3(b *testing.B) { benchmarkGammaVariance(15, 365, b
 func Benchmark_gamma_Variance4(b *testing.B) { benchmarkGammaVariance(3, 8, b) }
 func Benchmark_gamma_Variance5(b *testing.B) { benchmarkGammaVariance(1e3, 1, b) }
 func Benchmark_gamma_Variance6(b *testing.B) { benchmarkGammaVariance(534, 82, b) }
+
+func TestNewGamma(t *testing.T) {
+	tests := []struct {
+		name string
+		want Gamma
+	}{
+		{"Normal case", Gamma{1.0, 2.0}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := NewGamma(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewGamma() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewGamma(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewGamma()
+	}
+}
