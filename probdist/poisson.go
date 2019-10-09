@@ -5,6 +5,7 @@ import (
 )
 
 // Poisson is used to represent the poisson distribution parameters
+// Lambda is the average number of events per interval and must belong to the set of real positive numbers
 type Poisson struct {
 	Lambda float64
 }

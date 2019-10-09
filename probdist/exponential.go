@@ -5,6 +5,7 @@ import (
 )
 
 // Exponential is used to represent the exponential distribution parameters
+// The parameter Lambda must be > 0
 type Exponential struct {
 	Lambda float64
 }

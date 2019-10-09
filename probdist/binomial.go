@@ -5,6 +5,8 @@ import (
 )
 
 // Binomial is used to represent the binomial distribution parameters
+// N is the number of trials {0, 1, 2, 3, ...}
+// P is the succes probability of each trial [0, 1]
 type Binomial struct {
 	N float64
 	P float64

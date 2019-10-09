@@ -5,6 +5,8 @@ import (
 )
 
 // Normal is used to represent the normal distribution parameters
+// Mu is the mean
+// Sigma is the standard deviation
 type Normal struct {
 	Mu    float64
 	Sigma float64
