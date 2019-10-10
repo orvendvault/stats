@@ -6,11 +6,11 @@ type statsTable struct {
 	col   []float64
 }
 
-// interpolateColumns returns the value which is between the two known columns supposing a lineal distribution between them
+// interpolateCols returns the value which is between the two known columns supposing a lineal distribution between them
 //    l0   ----  c0 --- r0
 //    l    ----  ?  --- r
 func (tab statsTable) interpolateCols(c0 float64, rowidx int) float64 {
-	l0, r0, lid, rid := tab.getColumnValues(c0)
+	l0, r0, lid, rid := tab.getColValues(c0)
 	l := tab.table[rowidx][lid]
 	r := tab.table[rowidx][rid]
 	if l0 == r0 {
@@ -19,7 +19,7 @@ func (tab statsTable) interpolateCols(c0 float64, rowidx int) float64 {
 	return ((r-l)/(r0-l0))*(c0-l0) + l
 }
 
-func (tab statsTable) getColumnValues(c0 float64) (l0 float64, r0 float64, lid int, rid int) {
+func (tab statsTable) getColValues(c0 float64) (l0 float64, r0 float64, lid int, rid int) {
 	if c0 > tab.col[0] || c0 < tab.col[len(tStudentTable.col)-1] {
 		panic("stats: c0 value not valid in the table")
 	}
