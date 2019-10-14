@@ -6,33 +6,62 @@ import (
 	pd "github.com/orvend/stats/probdist"
 )
 
-// // OneSampleZTest performs a Z Test.
-// // This test can be performed when the population is normally distrivuted and the population variance is known.
-// // It returns true if the null hypothesis is accepted and false otherwise.
-// func OneSampleZTest(sample []float64, pop pd.Normal, alpha float64) bool {
-// 	smean := Mean(sample)
-// 	zscore := (smean - pop.Mu) / (pop.Sigma / math.Sqrt(float64(len(sample))))
-// 	pvalue := 1 - pop.CDF(zscore)
+// OneSampleZTest performs a Z Test.
+// Z is the Standard normal distribution N(0,1)
+// This test can be performed when the population is normally distributed and the population variance is known.
+// It returns true if the null hypothesis is accepted and false otherwise.
+// alpha is the significance level of one tail
+// Right tail (1):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean > pop mean
+// Two tails (2):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean != pop mean
+// Left tail (-1):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean < pop mean
+func OneSampleZTest(sample []float64, pop pd.Normal, alpha float64, tails int) (bool, float64) {
+	smean := Mean(sample)
+	zscore := (smean - pop.Mu) / (pop.Sigma / math.Sqrt(float64(len(sample))))
 
-// 	if pvalue < alpha {
-// 		return false
-// 	}
-// 	return true
-// }
+	switch tails {
+	case 1:
+		pvalue := 1 - pop.CDF(zscore)
+		if pvalue < alpha {
+			return false, pvalue
+		}
+		return true, pvalue
+	case 2:
+		//symmetric, we can use just one tail
+		pvalue := 1 - pop.CDF(zscore)
+		if pvalue < alpha {
+			return false, pvalue
+		}
+		return true, pvalue
+	case -1:
+		pvalue := pop.CDF(-zscore)
+		if pvalue < alpha {
+			return false, pvalue
+		}
+		return true, pvalue
+	default:
+		panic("stats: incorrect tails input value. Try 1(right), 2 or -1(left)")
+	}
+}
 
-//OneSampleTTest performs a One Sample T Test
-//This test can be performed when we don't know the populations std dev.
-//It returns true if the null hypoyhesis is accepted and false otherwise
-//alpha is the significance level of one tail
-//Right tail (1):
-//Null hypothesis Ho :  sample mean = pop mean
-//Alternative hypothesis H1 : sample mean > pop mean
-//Two tails (2):
-//Null hypothesis Ho :  sample mean = pop mean
-//Alternative hypothesis H1 : sample mean != pop mean
-//Left tail (-1):
-//Null hypothesis Ho :  sample mean = pop mean
-//Alternative hypothesis H1 : sample mean < pop mean
+// OneSampleTTest performs a One Sample T Test
+// This test can be performed when we don't know the populations std dev.
+// It returns true if the null hypoyhesis is accepted and false otherwise
+// alpha is the significance level of one tail
+// Right tail (1):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean > pop mean
+// Two tails (2):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean != pop mean
+// Left tail (-1):
+// Null hypothesis Ho :  sample mean = pop mean
+// Alternative hypothesis H1 : sample mean < pop mean
 func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails int) (bool, float64) {
 	mean := Mean(sample)
 	s := StdDev(sample)

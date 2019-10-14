@@ -20,6 +20,7 @@ func Test_normal_CDF(t *testing.T) {
 		{"NaN case mu", Normal{math.NaN(), 0.25}, args{0.2}, math.NaN()},
 		{"NaN case sigma", Normal{0.0, math.NaN()}, args{0.2}, math.NaN()},
 		{"Normal case", Normal{0.0, 1.0}, args{0.2}, 0.579259},
+		{"Normal case", Normal{0.0, 0.1}, args{0.174}, 0.959070},
 		{"Median case", Normal{0.0, 1.0}, args{0.0}, 0.5},
 		{"Negative input case", Normal{0.0, 1.0}, args{-0.2}, 0.420741},
 	}
