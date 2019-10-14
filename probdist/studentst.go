@@ -254,3 +254,9 @@ var tStudentTable statsTable = statsTable{
 	//[0.90,    0.95,   0.975,    0.99,   0.995,   0.999]  1-alpha
 	[]float64{0.1, 0.05, 0.025, 0.01, 0.005, 0.001},
 }
+
+var tStudentTableTwoTail statsTable = statsTable{
+	tStudentTable.table,
+	tStudentTable.row,
+	[]float64{0.2, 0.1, 0.05, 0.02, 0.01, 0.002},
+}

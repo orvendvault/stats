@@ -32,6 +32,7 @@ func TestOneSampleTTest(t *testing.T) {
 		sample  []float64
 		popmean float64
 		alpha   float64
+		tails   int
 	}
 	tests := []struct {
 		name  string
@@ -39,11 +40,11 @@ func TestOneSampleTTest(t *testing.T) {
 		want  bool
 		want1 float64
 	}{
-		{"Normal case", args{[]float64{0.1, 0.02, -0.3, 0.47, 0.015, 0.21, -0.32, -0.05, -0.1, 0.15, 0.17, 0.08, -0.125}, 0.0, 0.05}, true, 1.7823},
+		{"Normal case", args{[]float64{0.1, 0.02, -0.3, 0.47, 0.015, 0.21, -0.32, -0.05, -0.1, 0.15, 0.17, 0.08, -0.125}, 0.0, 0.05, 1}, true, 1.7823},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := OneSampleTTest(tt.args.sample, tt.args.popmean, tt.args.alpha)
+			got, got1 := OneSampleTTest(tt.args.sample, tt.args.popmean, tt.args.alpha, tt.args.tails)
 			if got != tt.want {
 				t.Errorf("OneSampleTTest() got = %v, want %v", got, tt.want)
 			}

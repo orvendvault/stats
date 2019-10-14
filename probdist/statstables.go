@@ -20,7 +20,7 @@ func (tab statsTable) interpolateCols(c0 float64, rowidx int) float64 {
 }
 
 func (tab statsTable) getColValues(c0 float64) (l0 float64, r0 float64, lid int, rid int) {
-	if c0 > tab.col[0] || c0 < tab.col[len(tStudentTable.col)-1] {
+	if c0 > tab.col[0] || c0 < tab.col[len(tab.col)-1] {
 		panic("stats: c0 value not valid in the table")
 	}
 
