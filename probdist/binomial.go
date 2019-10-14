@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"errors"
 	"math"
 )
 
@@ -10,6 +11,16 @@ import (
 type Binomial struct {
 	N float64
 	P float64
+}
+
+// NewBinomial is used to initialize binomial parameters. What is different from
+// Binomial type is that here the parameters are validated.
+// N must be an integer positive number and P a real between 0 and 1.
+func NewBinomial(n float64, p float64) (Binomial, error) {
+	if math.Mod(n, 1.0) != 0 || p < 0 || p > 1.0 {
+		return Binomial{20.0, 0.5}, errors.New("stats: invalid Binomial parameters")
+	}
+	return Binomial{N: n, P: p}, nil
 }
 
 // Mean returns the mean of the binomial distribution.

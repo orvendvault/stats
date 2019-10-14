@@ -131,15 +131,27 @@ func Benchmark_poisson_Variance5(b *testing.B) { benchmarkPoissonVariance(1e3, b
 func Benchmark_poisson_Variance6(b *testing.B) { benchmarkPoissonVariance(534, b) }
 
 func TestNewPoisson(t *testing.T) {
+	type args struct {
+		lambda float64
+	}
 	tests := []struct {
-		name string
-		want Poisson
+		name    string
+		args    args
+		want    Poisson
+		wantErr bool
 	}{
-		{"Normal case", Poisson{1.0}},
+		{"Normal case", args{1.0}, Poisson{1.0}, false},
+		{"Invalid negative case", args{-1.0}, Poisson{1.0}, true},
+		{"Invalid zero case", args{0.0}, Poisson{1.0}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewPoisson(); !reflect.DeepEqual(got, tt.want) {
+			got, err := NewPoisson(tt.args.lambda)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewPoisson() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewPoisson() = %v, want %v", got, tt.want)
 			}
 		})
@@ -148,6 +160,6 @@ func TestNewPoisson(t *testing.T) {
 
 func BenchmarkNewPoisson(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		NewPoisson()
+		NewPoisson(1.0)
 	}
 }

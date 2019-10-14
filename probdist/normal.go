@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"errors"
 	"math"
 )
 
@@ -12,9 +13,14 @@ type Normal struct {
 	Sigma float64
 }
 
-// NewNormal is used to initialize normal parameters.
-func NewNormal() Normal {
-	return Normal{0.0, 1.0}
+// NewNormal is used to initialize normal parameters. What is different from
+// Normal type is that here the parameters are validated.
+// Mu must be a real number (+ or -) and Sigma > 0.
+func NewNormal(mu float64, sigma float64) (Normal, error) {
+	if sigma <= 0 {
+		return Normal{0, 1.0}, errors.New("stats: invalid Normal parameters. Check Sigma > 0")
+	}
+	return Normal{Mu: mu, Sigma: sigma}, nil
 }
 
 // CDF returns the cumulative distribution function output of the normal distribution for a given x.

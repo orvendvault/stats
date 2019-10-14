@@ -177,15 +177,27 @@ func Benchmark_exponential_Variance5(b *testing.B) { benchmarkExponentialVarianc
 func Benchmark_exponential_Variance6(b *testing.B) { benchmarkExponentialVariance(534, b) }
 
 func TestNewExponential(t *testing.T) {
+	type args struct {
+		lambda float64
+	}
 	tests := []struct {
-		name string
-		want Exponential
+		name    string
+		args    args
+		want    Exponential
+		wantErr bool
 	}{
-		{"Normal case", Exponential{1.0}},
+		{"Normal case", args{1.0}, Exponential{1.0}, false},
+		{"Invalid negative case", args{-1.0}, Exponential{1.0}, true},
+		{"Invalid zero case", args{0.0}, Exponential{1.0}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewExponential(); !reflect.DeepEqual(got, tt.want) {
+			got, err := NewExponential(tt.args.lambda)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewExponential() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewExponential() = %v, want %v", got, tt.want)
 			}
 		})
@@ -194,6 +206,6 @@ func TestNewExponential(t *testing.T) {
 
 func BenchmarkNewExponential(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		NewExponential()
+		NewExponential(1.0)
 	}
 }

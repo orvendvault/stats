@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"errors"
 	"math"
 )
 
@@ -10,9 +11,14 @@ type Exponential struct {
 	Lambda float64
 }
 
-// NewExponential is used to initialize exponential parameters.
-func NewExponential() Exponential {
-	return Exponential{1.0}
+// NewExponential is used to initialize exponential parameters. What is different from
+// Exponential type is that here the parameters are validated.
+// Lambda must be a real number > 0.
+func NewExponential(lambda float64) (Exponential, error) {
+	if lambda <= 0 {
+		return Exponential{1.0}, errors.New("stats: invalid Exponential parameters. Check Lambda > 0")
+	}
+	return Exponential{Lambda: lambda}, nil
 }
 
 // CDF returns the cumulative distribution function output for the exponential distribution.

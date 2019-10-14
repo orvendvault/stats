@@ -3,6 +3,7 @@ package stats
 import (
 	"math"
 	"math/rand"
+	"reflect"
 	"testing"
 )
 
@@ -134,3 +135,38 @@ func Benchmark_binomial_Variance3(b *testing.B) { benchmarkBinomialVariance(15, 
 func Benchmark_binomial_Variance4(b *testing.B) { benchmarkBinomialVariance(3, 8, b) }
 func Benchmark_binomial_Variance5(b *testing.B) { benchmarkBinomialVariance(1e3, 1, b) }
 func Benchmark_binomial_Variance6(b *testing.B) { benchmarkBinomialVariance(534, 82, b) }
+
+func TestNewBinomial(t *testing.T) {
+	type args struct {
+		n float64
+		p float64
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    Binomial
+		wantErr bool
+	}{
+		{"Normal case", args{20.0, 0.75}, Binomial{20.0, 0.75}, false},
+		{"Invalid N case", args{20.5, 0.2}, Binomial{20.0, 0.5}, true},
+		{"Invalid P case", args{10.0, 1.5}, Binomial{20.0, 0.5}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := NewBinomial(tt.args.n, tt.args.p)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewBinomial() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("NewBinomial() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func BenchmarkNewBinomial(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		NewBinomial(20.0, 0.5)
+	}
+}

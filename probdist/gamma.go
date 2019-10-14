@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"errors"
 	"math"
 )
 
@@ -12,9 +13,14 @@ type Gamma struct {
 	Theta float64
 }
 
-// NewGamma is used to initialize gamma parameters.
-func NewGamma() Gamma {
-	return Gamma{1.0, 2.0}
+// NewGamma is used to initialize gamma parameters. What is different from
+// Gamma type is that here the parameters are validated.
+// K > 0 and Theta > 0 , both real numbers.
+func NewGamma(k float64, theta float64) (Gamma, error) {
+	if k <= 0 || theta <= 0 {
+		return Gamma{1.0, 2.0}, errors.New("stats: invalid Gamma parameters. Check K > 0 and Theta > 0")
+	}
+	return Gamma{K: k, Theta: theta}, nil
 }
 
 // Mean returns the mean of the gamma distribution.

@@ -1,6 +1,7 @@
 package stats
 
 import (
+	"errors"
 	"math"
 )
 
@@ -10,9 +11,14 @@ type Poisson struct {
 	Lambda float64
 }
 
-// NewPoisson is used to initialize poisson parameters.
-func NewPoisson() Poisson {
-	return Poisson{1.0}
+// NewPoisson is used to initialize exponential parameters. What is different from
+// Poisson type is that here the parameters are validated.
+// Lambda must be a real number > 0.
+func NewPoisson(lambda float64) (Poisson, error) {
+	if lambda <= 0 {
+		return Poisson{1.0}, errors.New("stats: invalid Poisson parameters. Check Lambda > 0")
+	}
+	return Poisson{Lambda: lambda}, nil
 }
 
 // Mean returns the mean of the poisson distribution.

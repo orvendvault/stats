@@ -1,6 +1,9 @@
 package stats
 
-import "math"
+import (
+	"errors"
+	"math"
+)
 
 // import (
 // 	"math"
@@ -9,6 +12,16 @@ import "math"
 // StudentsT is used to represent the students t distribution parameters.
 type StudentsT struct {
 	V float64
+}
+
+// NewStudentsT is used to initialize Student's t parameters. What is different from
+// StudentsT type is that here the parameters are validated.
+// V must be a integer number > 0.
+func NewStudentsT(v float64) (StudentsT, error) {
+	if v <= 0 || math.Mod(v, 1.0) != 0 {
+		return StudentsT{1.0}, errors.New("stats: invalid StudentsT parameters. Check V > 0")
+	}
+	return StudentsT{V: v}, nil
 }
 
 //GetTStatistic returns the t statistic value.
