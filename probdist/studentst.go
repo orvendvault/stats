@@ -6,33 +6,12 @@ import "math"
 // 	"math"
 // )
 
-// StudentsT is used to represent the students t distribution parameters
+// StudentsT is used to represent the students t distribution parameters.
 type StudentsT struct {
 	V float64
 }
 
-// func (t studentsT) CDF(x float64, v int) float64 {
-// 	if x == 0 {
-// 		return 0.5
-// 	} else if x > 0 {
-// 		return 1 - 0.5*regIncBeta(t.v/(x*x+t.v), t.v/2, 0.5)
-// 	} else if x < 0 {
-// 		return 1 - (1 - 0.5*regIncBeta(t.v/(x*x+t.v), t.v/2, 0.5))
-// 	} else {
-// 		return math.NaN()
-// 	}
-// }
-
-// //TODO: improve this functions.
-// func lgamma(input float64) float64 {
-// 	res, _ := math.Lgamma(input)
-// 	return res
-// }
-// func regIncBeta(x, a, b float64) float64 {
-// 	return math.Exp(lgamma(a) + lgamma(b) - lgamma(a+b))
-// }
-
-//GetTStatistic returns the t statistic value
+//GetTStatistic returns the t statistic value.
 func GetTStatistic(v float64, alpha float64) float64 {
 	var rowidx int
 	if v <= 100 {
@@ -43,7 +22,7 @@ func GetTStatistic(v float64, alpha float64) float64 {
 	return tStudentTable.interpolateCols(alpha, rowidx)
 }
 
-//Data from: https://www.itl.nist.gov/div898/handbook/eda/section3/eda3672.htm
+//Data from: https://www.itl.nist.gov/div898/handbook/eda/section3/eda3672.htm.
 var tStudentTable statsTable = statsTable{
 	[][]float64{
 		[]float64{3.078, 6.314, 12.706, 31.821, 63.657, 318.313},
@@ -251,7 +230,7 @@ var tStudentTable statsTable = statsTable{
 		100.0,
 		math.Inf(1.0)},
 
-	//[0.90,    0.95,   0.975,    0.99,   0.995,   0.999]  1-alpha
+	//[0.90,    0.95,   0.975,    0.99,   0.995,   0.999]  1-alpha.
 	[]float64{0.1, 0.05, 0.025, 0.01, 0.005, 0.001},
 }
 

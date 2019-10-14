@@ -35,7 +35,7 @@ func Median(input []float64) (output float64) {
 	return output
 }
 
-// Max returns the maximum value of the sample
+// Max returns the maximum value of the sample.
 func Max(input []float64) float64 {
 	if len(input) == 0 {
 		return math.NaN()
@@ -52,7 +52,7 @@ func Max(input []float64) float64 {
 	return max
 }
 
-// Min returns the minimum value of the sample
+// Min returns the minimum value of the sample.
 func Min(input []float64) float64 {
 	if len(input) == 0 {
 		return math.NaN()
@@ -69,7 +69,7 @@ func Min(input []float64) float64 {
 	return min
 }
 
-// Range returns the difference between the largest and smallest values
+// Range returns the difference between the largest and smallest values.
 func Range(input []float64) float64 {
 	if len(input) < 2 {
 		return math.NaN()
@@ -77,7 +77,7 @@ func Range(input []float64) float64 {
 	return Max(input) - Min(input)
 }
 
-// sumOfSquaredDifferences returns the sum of the squared differences of each observation from the mean
+// sumOfSquaredDifferences returns the sum of the squared differences of each observation from the mean.
 func sumOfSquaredDifferences(input []float64) float64 {
 	if len(input) < 2 {
 		return math.NaN()
@@ -90,17 +90,17 @@ func sumOfSquaredDifferences(input []float64) float64 {
 	return ssd
 }
 
-// StdDev returns the standard deviation of the sample
+// StdDev returns the standard deviation of the sample.
 func StdDev(input []float64) float64 {
 	return math.Sqrt(Variance(input))
 }
 
-// Variance returns the variance of the sample
+// Variance returns the variance of the sample.
 func Variance(input []float64) float64 {
 	return sumOfSquaredDifferences(input) / float64(len(input)-1)
 }
 
-// Quartile1 returns the first quartile
+// Quartile1 returns the first quartile.
 func Quartile1(input []float64) (Q1 float64) {
 	if len(input) < 4 {
 		return math.NaN()
@@ -116,12 +116,12 @@ func Quartile1(input []float64) (Q1 float64) {
 	return Q1
 }
 
-// Quartile2 returns the second quartile (equivalent to the median)
+// Quartile2 returns the second quartile (equivalent to the median).
 func Quartile2(input []float64) float64 {
 	return Median(input)
 }
 
-// Quartile3 returns the third quartile
+// Quartile3 returns the third quartile.
 func Quartile3(input []float64) (Q3 float64) {
 	if len(input) < 4 {
 		return math.NaN()
@@ -137,7 +137,7 @@ func Quartile3(input []float64) (Q3 float64) {
 	return Q3
 }
 
-// InterQuartileRange returns the difference between the third and the first quartiles
+// InterQuartileRange returns the difference between the third and the first quartiles.
 func InterQuartileRange(input []float64) float64 {
 	return Quartile3(input) - Quartile1(input)
 }

@@ -6,9 +6,9 @@ type statsTable struct {
 	col   []float64
 }
 
-// interpolateCols returns the value which is between the two known columns supposing a lineal distribution between them
-//    l0   ----  c0 --- r0
-//    l    ----  ?  --- r
+// interpolateCols returns the value which is between the two known columns supposing a lineal distribution between them.
+//    l0   ----  c0 --- r0.
+//    l    ----  ?  --- r.
 func (tab statsTable) interpolateCols(c0 float64, rowidx int) float64 {
 	l0, r0, lid, rid := tab.getColValues(c0)
 	l := tab.table[rowidx][lid]
