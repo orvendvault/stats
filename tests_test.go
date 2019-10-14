@@ -12,7 +12,7 @@ func TestOneSampleZTest(t *testing.T) {
 		sample []float64
 		pop    pd.Normal
 		alpha  float64
-		tails  int
+		tails  TailDirection
 	}
 	tests := []struct {
 		name  string
@@ -40,7 +40,7 @@ func TestOneSampleTTest(t *testing.T) {
 		sample  []float64
 		popmean float64
 		alpha   float64
-		tails   int
+		tails   TailDirection
 	}
 	tests := []struct {
 		name  string
