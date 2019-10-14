@@ -18,7 +18,7 @@ type Gamma struct {
 // K > 0 and Theta > 0 , both real numbers.
 func NewGamma(k float64, theta float64) (Gamma, error) {
 	if k <= 0 || theta <= 0 {
-		return Gamma{1.0, 2.0}, errors.New("stats: invalid Gamma parameters. Check K > 0 and Theta > 0")
+		return Gamma{}, errors.New("stats: invalid Gamma parameters. Check K > 0 and Theta > 0")
 	}
 	return Gamma{K: k, Theta: theta}, nil
 }

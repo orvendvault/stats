@@ -19,7 +19,7 @@ type StudentsT struct {
 // V must be a integer number > 0.
 func NewStudentsT(v float64) (StudentsT, error) {
 	if v <= 0 || math.Mod(v, 1.0) != 0 {
-		return StudentsT{1.0}, errors.New("stats: invalid StudentsT parameters. Check V > 0")
+		return StudentsT{}, errors.New("stats: invalid StudentsT parameters. Check V > 0")
 	}
 	return StudentsT{V: v}, nil
 }

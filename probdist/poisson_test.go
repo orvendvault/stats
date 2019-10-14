@@ -141,8 +141,8 @@ func TestNewPoisson(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{1.0}, Poisson{1.0}, false},
-		{"Invalid negative case", args{-1.0}, Poisson{1.0}, true},
-		{"Invalid zero case", args{0.0}, Poisson{1.0}, true},
+		{"Invalid negative case", args{-1.0}, Poisson{}, true},
+		{"Invalid zero case", args{0.0}, Poisson{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

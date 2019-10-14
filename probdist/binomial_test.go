@@ -148,8 +148,8 @@ func TestNewBinomial(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{20.0, 0.75}, Binomial{20.0, 0.75}, false},
-		{"Invalid N case", args{20.5, 0.2}, Binomial{20.0, 0.5}, true},
-		{"Invalid P case", args{10.0, 1.5}, Binomial{20.0, 0.5}, true},
+		{"Invalid N case", args{20.5, 0.2}, Binomial{}, true},
+		{"Invalid P case", args{10.0, 1.5}, Binomial{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -37,9 +37,9 @@ func TestNewStudentsT(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{1.0}, StudentsT{1.0}, false},
-		{"Invalid negative case", args{-1.0}, StudentsT{1.0}, true},
-		{"Invalid zero case", args{0.0}, StudentsT{1.0}, true},
-		{"Invalid real case", args{2.5}, StudentsT{1.0}, true},
+		{"Invalid negative case", args{-1.0}, StudentsT{}, true},
+		{"Invalid zero case", args{0.0}, StudentsT{}, true},
+		{"Invalid real case", args{2.5}, StudentsT{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -16,7 +16,7 @@ type Poisson struct {
 // Lambda must be a real number > 0.
 func NewPoisson(lambda float64) (Poisson, error) {
 	if lambda <= 0 {
-		return Poisson{1.0}, errors.New("stats: invalid Poisson parameters. Check Lambda > 0")
+		return Poisson{}, errors.New("stats: invalid Poisson parameters. Check Lambda > 0")
 	}
 	return Poisson{Lambda: lambda}, nil
 }

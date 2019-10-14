@@ -187,8 +187,8 @@ func TestNewExponential(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{1.0}, Exponential{1.0}, false},
-		{"Invalid negative case", args{-1.0}, Exponential{1.0}, true},
-		{"Invalid zero case", args{0.0}, Exponential{1.0}, true},
+		{"Invalid negative case", args{-1.0}, Exponential{}, true},
+		{"Invalid zero case", args{0.0}, Exponential{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

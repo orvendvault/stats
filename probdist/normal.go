@@ -18,7 +18,7 @@ type Normal struct {
 // Mu must be a real number (+ or -) and Sigma > 0.
 func NewNormal(mu float64, sigma float64) (Normal, error) {
 	if sigma <= 0 {
-		return Normal{0, 1.0}, errors.New("stats: invalid Normal parameters. Check Sigma > 0")
+		return Normal{}, errors.New("stats: invalid Normal parameters. Check Sigma > 0")
 	}
 	return Normal{Mu: mu, Sigma: sigma}, nil
 }

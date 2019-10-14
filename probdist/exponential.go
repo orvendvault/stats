@@ -16,7 +16,7 @@ type Exponential struct {
 // Lambda must be a real number > 0.
 func NewExponential(lambda float64) (Exponential, error) {
 	if lambda <= 0 {
-		return Exponential{1.0}, errors.New("stats: invalid Exponential parameters. Check Lambda > 0")
+		return Exponential{}, errors.New("stats: invalid Exponential parameters. Check Lambda > 0")
 	}
 	return Exponential{Lambda: lambda}, nil
 }

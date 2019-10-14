@@ -242,7 +242,7 @@ func TestNewNormal(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{0.0, 1.0}, Normal{0.0, 1.0}, false},
-		{"Invalid sigma case", args{0.0, -1.0}, Normal{0.0, 1.0}, true},
+		{"Invalid sigma case", args{0.0, -1.0}, Normal{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

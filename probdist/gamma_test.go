@@ -148,10 +148,10 @@ func TestNewGamma(t *testing.T) {
 		wantErr bool
 	}{
 		{"Normal case", args{2.0, 1.0}, Gamma{2.0, 1.0}, false},
-		{"Invalid zero K case", args{0.0, 2.0}, Gamma{1.0, 2.0}, true},
-		{"Invalid zero Theta case", args{1.0, 0.0}, Gamma{1.0, 2.0}, true},
-		{"Invalid negative K case", args{-1.0, 2.0}, Gamma{1.0, 2.0}, true},
-		{"Invalid negative Theta case", args{1.0, -5.0}, Gamma{1.0, 2.0}, true},
+		{"Invalid zero K case", args{0.0, 2.0}, Gamma{}, true},
+		{"Invalid zero Theta case", args{1.0, 0.0}, Gamma{}, true},
+		{"Invalid negative K case", args{-1.0, 2.0}, Gamma{}, true},
+		{"Invalid negative Theta case", args{1.0, -5.0}, Gamma{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
