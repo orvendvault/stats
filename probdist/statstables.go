@@ -26,10 +26,8 @@ func (tab statsTable) getColValues(c0 float64) (l0 float64, r0 float64, lid int,
 
 	for i, a := range tab.col[:len(tab.col)-1] {
 		if c0 <= a {
-			l0 = a
-			r0 = float64(tab.col[i+1])
-			lid = i
-			rid = i + 1
+			l0, r0 = a, float64(tab.col[i+1])
+			lid, rid = i, i+1
 			break
 		}
 	}
