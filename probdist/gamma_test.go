@@ -137,15 +137,30 @@ func Benchmark_gamma_Variance5(b *testing.B) { benchmarkGammaVariance(1e3, 1, b)
 func Benchmark_gamma_Variance6(b *testing.B) { benchmarkGammaVariance(534, 82, b) }
 
 func TestNewGamma(t *testing.T) {
+	type args struct {
+		k     float64
+		theta float64
+	}
 	tests := []struct {
-		name string
-		want Gamma
+		name    string
+		args    args
+		want    Gamma
+		wantErr bool
 	}{
-		{"Normal case", Gamma{1.0, 2.0}},
+		{"Normal case", args{2.0, 1.0}, Gamma{2.0, 1.0}, false},
+		{"Invalid zero K case", args{0.0, 2.0}, Gamma{}, true},
+		{"Invalid zero Theta case", args{1.0, 0.0}, Gamma{}, true},
+		{"Invalid negative K case", args{-1.0, 2.0}, Gamma{}, true},
+		{"Invalid negative Theta case", args{1.0, -5.0}, Gamma{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewGamma(); !reflect.DeepEqual(got, tt.want) {
+			got, err := NewGamma(tt.args.k, tt.args.theta)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewGamma() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewGamma() = %v, want %v", got, tt.want)
 			}
 		})
@@ -154,6 +169,6 @@ func TestNewGamma(t *testing.T) {
 
 func BenchmarkNewGamma(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		NewGamma()
+		NewGamma(2.0, 1.5)
 	}
 }

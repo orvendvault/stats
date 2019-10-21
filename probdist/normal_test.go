@@ -20,6 +20,7 @@ func Test_normal_CDF(t *testing.T) {
 		{"NaN case mu", Normal{math.NaN(), 0.25}, args{0.2}, math.NaN()},
 		{"NaN case sigma", Normal{0.0, math.NaN()}, args{0.2}, math.NaN()},
 		{"Normal case", Normal{0.0, 1.0}, args{0.2}, 0.579259},
+		{"Normal case", Normal{0.0, 0.1}, args{0.174}, 0.959070},
 		{"Median case", Normal{0.0, 1.0}, args{0.0}, 0.5},
 		{"Negative input case", Normal{0.0, 1.0}, args{-0.2}, 0.420741},
 	}
@@ -230,15 +231,27 @@ func Benchmark_normal_Variance5(b *testing.B) { benchmarkNormalVariance(1e3, 1, 
 func Benchmark_normal_Variance6(b *testing.B) { benchmarkNormalVariance(534, 82, b) }
 
 func TestNewNormal(t *testing.T) {
+	type args struct {
+		mu    float64
+		sigma float64
+	}
 	tests := []struct {
-		name string
-		want Normal
+		name    string
+		args    args
+		want    Normal
+		wantErr bool
 	}{
-		{"Normal case", Normal{0.0, 1.0}},
+		{"Normal case", args{0.0, 1.0}, Normal{0.0, 1.0}, false},
+		{"Invalid sigma case", args{0.0, -1.0}, Normal{}, true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NewNormal(); !reflect.DeepEqual(got, tt.want) {
+			got, err := NewNormal(tt.args.mu, tt.args.sigma)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("NewNormal() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewNormal() = %v, want %v", got, tt.want)
 			}
 		})
@@ -247,6 +260,6 @@ func TestNewNormal(t *testing.T) {
 
 func BenchmarkNewNormal(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		NewNormal()
+		NewNormal(0.0, 1.0)
 	}
 }
