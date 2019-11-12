@@ -57,7 +57,7 @@ func OneSampleZTest(sample []float64, pop pd.Normal, alpha float64, tails TailDi
 		}
 		return true, pvalue
 	default:
-		panic("stats: incorrect tails input value. Try 1(right), 2 or -1(left)")
+		panic("stats: incorrect tails input value. Try TailRight, TailLeft or TailBoth")
 	}
 }
 
@@ -82,14 +82,14 @@ func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails Tail
 	switch tails {
 	case TailRight:
 		tcritical := pd.GetTStatistic(n-1, alpha)
-		if tscore > tcritical {
+		if math.Abs(tscore) > tcritical {
 			return false, tcritical
 		}
 		return true, tcritical
 	case TailBoth:
 		utcritical := pd.GetTStatistic(n-1, 2*alpha)
 		ltcritical := -utcritical
-		if tscore > utcritical || tscore < ltcritical {
+		if math.Abs(tscore) > utcritical || tscore < ltcritical {
 			return false, utcritical
 		}
 		return true, utcritical

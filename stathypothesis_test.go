@@ -48,7 +48,8 @@ func TestOneSampleTTest(t *testing.T) {
 		want  bool
 		want1 float64
 	}{
-		{"Normal case", args{[]float64{0.1, 0.02, -0.3, 0.47, 0.015, 0.21, -0.32, -0.05, -0.1, 0.15, 0.17, 0.08, -0.125}, 0.0, 0.05, 1}, true, 1.7823},
+		{"Normal case", args{[]float64{0.1, 0.02, -0.3, 0.47, 0.015, 0.21, -0.32, -0.05, -0.1, 0.15, 0.17, 0.08, -0.125}, 0.0, 0.05, 0}, true, 1.7823},
+		{"Normal case false", args{[]float64{0.1, 0.02, -0.3, 0.47, 0.015, 0.21, -0.32, -0.05, -0.1, 0.15, 0.17, 0.08, -0.125}, 10.0, 0.05, 0}, false, 1.7823},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
