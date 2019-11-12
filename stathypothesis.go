@@ -100,6 +100,6 @@ func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails Tail
 		}
 		return true, tcritical
 	default:
-		panic("stats: incorrect tails input value. Try 1(right), 2 or -1(left)")
+		panic("stats: incorrect tails input value. Try Try TailRight, TailLeft or TailBoth")
 	}
 }
