@@ -24,13 +24,13 @@ const (
 // It returns true if the null hypothesis is accepted and false otherwise.
 // alpha is the significance level of one tail.
 // Right tail (1):
-// Null hypothesis Ho :  sample mean = pop mean.
+// Null hypothesis Ho :  sample mean <= pop mean.
 // Alternative hypothesis H1 : sample mean > pop mean.
 // Two tails (2):
 // Null hypothesis Ho :  sample mean = pop mean.
 // Alternative hypothesis H1 : sample mean != pop mean.
 // Left tail (-1):
-// Null hypothesis Ho :  sample mean = pop mean.
+// Null hypothesis Ho :  sample mean >= pop mean.
 // Alternative hypothesis H1 : sample mean < pop mean.
 func OneSampleZTest(sample []float64, pop pd.Normal, alpha float64, tails TailDirection) (bool, float64) {
 	smean := Mean(sample)
@@ -66,13 +66,13 @@ func OneSampleZTest(sample []float64, pop pd.Normal, alpha float64, tails TailDi
 // It returns true if the null hypoyhesis is accepted and false otherwise.
 // alpha is the significance level of one tail.
 // Right tail :
-// Null hypothesis Ho :  sample mean = pop mean.
+// Null hypothesis Ho :  sample mean <= pop mean.
 // Alternative hypothesis H1 : sample mean > pop mean.
 // Two tails :
 // Null hypothesis Ho :  sample mean = pop mean.
 // Alternative hypothesis H1 : sample mean != pop mean.
 // Left tail :
-// Null hypothesis Ho :  sample mean = pop mean.
+// Null hypothesis Ho :  sample mean >= pop mean.
 // Alternative hypothesis H1 : sample mean < pop mean.
 func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails TailDirection) (bool, float64) {
 	mean := Mean(sample)
@@ -82,14 +82,14 @@ func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails Tail
 	switch tails {
 	case TailRight:
 		tcritical := pd.GetTStatistic(n-1, alpha)
-		if math.Abs(tscore) > tcritical {
+		if tscore > tcritical {
 			return false, tcritical
 		}
 		return true, tcritical
 	case TailBoth:
 		utcritical := pd.GetTStatistic(n-1, 2*alpha)
 		ltcritical := -utcritical
-		if math.Abs(tscore) > utcritical || tscore < ltcritical {
+		if tscore > utcritical || tscore < ltcritical {
 			return false, utcritical
 		}
 		return true, utcritical
