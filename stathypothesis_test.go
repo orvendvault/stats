@@ -91,7 +91,7 @@ func TestPairedTTest(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := PairedTTest(tt.args.presample, tt.args.postsample, tt.args.alpha, tt.args.tails)
+			got, _, _ := PairedTTest(tt.args.presample, tt.args.postsample, tt.args.alpha, tt.args.tails)
 			if got != tt.want {
 				t.Errorf("PairedTTest() got = %v, want %v", got, tt.want)
 			}
