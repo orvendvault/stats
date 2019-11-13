@@ -103,3 +103,41 @@ func OneSampleTTest(sample []float64, popmean float64, alpha float64, tails Tail
 		panic("stats: incorrect tails input value. Try Try TailRight, TailLeft or TailBoth")
 	}
 }
+
+// PairedTTest function returns the result of a Pared T Test
+func PairedTTest(presample []float64, postsample []float64, alpha float64, tails TailDirection) (bool, float64) {
+	if len(presample) != len(postsample) {
+		panic("stats: incorrect samples length")
+	}
+	diffsample := make([]float64, len(presample))
+	for i, e := range presample {
+		diffsample = append(diffsample, e-postsample[i])
+	}
+	diffmean := Mean(diffsample)
+	diffs := StdDev(diffsample)
+	n := float64(len(presample))
+	tscore := diffmean / (diffs / math.Sqrt(n))
+	switch tails {
+	case TailRight:
+		tcritical := pd.GetTStatistic(n-1, alpha)
+		if tscore > tcritical {
+			return false, tcritical
+		}
+		return true, tcritical
+	case TailBoth:
+		utcritical := pd.GetTStatistic(n-1, 2*alpha)
+		ltcritical := -utcritical
+		if tscore > utcritical || tscore < ltcritical {
+			return false, utcritical
+		}
+		return true, utcritical
+	case TailLeft:
+		tcritical := -pd.GetTStatistic(n-1, alpha)
+		if tscore < tcritical {
+			return false, tcritical
+		}
+		return true, tcritical
+	default:
+		panic("stats: incorrect tails input value. Try Try TailRight, TailLeft or TailBoth")
+	}
+}
