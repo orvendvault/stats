@@ -23,6 +23,11 @@ func NewNormal(mu float64, sigma float64) (Normal, error) {
 	return Normal{Mu: mu, Sigma: sigma}, nil
 }
 
+// PDF returns the probability density function output of the normal distribution for a given x.
+func (norm Normal) PDF(x float64) float64 {
+	return math.Exp(-(x-norm.Mu)*(x-norm.Mu)/(2*norm.Sigma*norm.Sigma)) / (norm.Sigma * math.Sqrt(2*math.Pi))
+}
+
 // CDF returns the cumulative distribution function output of the normal distribution for a given x.
 func (norm Normal) CDF(x float64) float64 {
 	return 0.5 * (1 + math.Erf((x-norm.Mu)/(math.Sqrt(2)*norm.Sigma)))
