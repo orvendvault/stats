@@ -141,3 +141,28 @@ func Quartile3(input []float64) (Q3 float64) {
 func InterQuartileRange(input []float64) float64 {
 	return Quartile3(input) - Quartile1(input)
 }
+
+// Covariance returns the covariance between two data samples
+func Covariance(a []float64, b []float64) float64 {
+	if len(a) != len(b) {
+		return math.NaN()
+	}
+	aMean := Mean(a)
+	bMean := Mean(b)
+	sum := 0.0
+	for i := range a {
+		sum += (a[i] - aMean) * (b[i] - bMean)
+	}
+	return sum / float64(len(a)-1)
+}
+
+// Correlation returns the correlation between two data samples
+func Correlation(a []float64, b []float64) float64 {
+	cov := Covariance(a, b)
+	sdA := StdDev(a)
+	sdB := StdDev(b)
+	if sdA == 0 || sdB == 0 {
+		return math.NaN()
+	}
+	return cov / (sdA * sdB)
+}
